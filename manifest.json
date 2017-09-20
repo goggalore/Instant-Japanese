@@ -1,0 +1,31 @@
+{
+    "manifest_version": 2,
+    
+    "name": "Instant Japanese",
+    "description": "This extension translates a highlighted expression from Japanese to English or English to Japanese at the click of a button",
+    "version": "1.0.0",
+
+    "browser_action": {
+        "default_icon": "icons/icon.png",
+        "default_popup": "popup.html"
+    },
+
+    "background": {
+        "scripts": ["source/eventPage/eventPage.js"],
+        "persistent": false
+    },
+
+    "permissions": [
+        "tabs",
+        "*://*.jisho.org/api/v1/search/*"
+    ],
+
+    "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "css": ["source/inject/inject.css"],
+      "js": ["source/inject/inject.js"]
+    }
+  ]
+}
+ 
