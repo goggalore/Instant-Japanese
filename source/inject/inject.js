@@ -126,4 +126,4 @@ function removePreviousModal () {
     }
 }
 // TODO 
-// refactor?
+// when response returns an empty dictionary definition, display appropriate error message
