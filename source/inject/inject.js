@@ -1,6 +1,5 @@
 var positionX = 0;
 var positionY = 0;
-var index = 0;
 
 document.addEventListener('keyup', onKeyPress);
 document.addEventListener('mousedown', getCoordinates);
@@ -8,11 +7,12 @@ document.addEventListener('mousedown', getCoordinates);
 function onKeyPress(event) {  
     var toggle = 'T'.charCodeAt();
     var selection = document.getSelection().toString();
+    var modal = document.querySelector('.IJmodal'); // don't want to send a request if modal is already open
 
     const MAX_LENGTH = 20;
 
-    if(event.keyCode === toggle && selection !== '' && selection.length <= MAX_LENGTH) {
-        chrome.runtime.sendMessage({searchTerm: selection}, createPopup);
+    if(modal === null && event.keyCode === toggle && selection !== '' && selection.length <= MAX_LENGTH) {
+        chrome.runtime.sendMessage({searchTerm: selection}, createModal);
     }
 
     return;
@@ -23,109 +23,106 @@ function getCoordinates(event) {
     positionY = event.pageY;
 }
 
-function createPopup(response) {
-    removePreviousPopup();
-    var firstResult = response.data[index];
-    var japaneseContent = {};
-    var englishContent = {};
-    var word = '';
+function createModal(response) {
+    var modal = document.createElement('div');
+    var content = {
+        'reading': document.createElement('span'),
+        'word': document.createElement('span'),
+        'definitions': document.createElement('span'),
+        'partsOfSpeech': document.createElement('span'),
+        'jishoLink': document.createElement('a'),
+    }
 
-    var popup = document.createElement('div');
-    var word = document.createElement('span');
-    var reading = document.createElement('span');
-    var partsOfSpeech = document.createElement('span');
-    var jishoLink = document.createElement('a');
-    var definitions = document.createElement('span');
+    var contentNames = Object.getOwnPropertyNames(content);
 
     var displacementX = 25;
     var displacementY = 25;
 
-    popup.className = 'IJpopup';
-    popup.style.top = (positionY + displacementY).toString() + 'px';
-    popup.style.left = (positionX - displacementX).toString() + 'px';  
+    var index = 0;
 
-    reading.className = 'IJcontent';
-    reading.id = 'IJreading';
+    removePreviousModal();
 
-    if (firstResult === undefined) {
-        reading.innerHTML = response.status;
-        popup.appendChild(reading);
-        document.body.appendChild(popup);
-        document.addEventListener('mousedown', removePopup);
-        return;
+    modal.className = 'IJmodal';
+    modal.style.top = (positionY + displacementY).toString() + 'px';
+    modal.style.left = (positionX - displacementX).toString() + 'px';
+    
+
+    for(var i = 0; i < contentNames.length; i++){
+        content[contentNames[i]].className = 'IJcontent';
+        content[contentNames[i]].id = 'IJ' + contentNames[i];
+        modal.appendChild(content[contentNames[i]]);
     }
 
-    japaneseContent = firstResult.japanese[0];
-    englishContent = firstResult.senses[0];
+    document.body.appendChild(modal);
+    document.addEventListener('mousedown', removeModal);
 
-    reading.innerHTML = japaneseContent.reading || ''; 
-
-    word.className = 'IJcontent';
-    word.id = 'IJword';
-    word.innerHTML = japaneseContent.word || '';
-
-    definitions.className = 'IJcontent';
-    definitions.id = 'IJdefinitions';
-    definitions.innerHTML = englishContent.english_definitions.join(', ') || '';
-
-    partsOfSpeech.className = 'IJcontent';
-    partsOfSpeech.id = 'IJpartsOfSpeech';
-    partsOfSpeech.innerHTML = englishContent.parts_of_speech.join(', ') || '';
-
-    jishoLink.className = 'IJcontent';
-    jishoLink.id = 'IJjisho';
-    jishoLink.innerHTML = 'jisho.org'
-    jishoLink.href = 'http://jisho.org/search/' + encodeURIComponent(japaneseContent.word);
-    jishoLink.target = '_blank';
-
-    popup.style.height = (englishContent.english_definitions.join('').length/3 + 200).toString() + 'px';
-
-    popup.appendChild(reading);
-    popup.appendChild(word);
-    popup.appendChild(definitions);
-    popup.appendChild(partsOfSpeech);
-    popup.appendChild(jishoLink);
-    document.body.appendChild(popup);
-
-    document.addEventListener('mousedown', removePopup);
-
-    if (index === response.data.length - 1) {
-        index = 0;
-        return;
-    }
-
-    index++;
+    displayDefinition(index, content, response);
 }
 
-function removePopup(event) {
-    var popup = document.getElementsByClassName('IJpopup')[0];
+function displayDefinition(index, content, response) {   
+    var modal = document.querySelector('.IJmodal');
+    var toggle = 'T'.charCodeAt();
 
-    if(!isPopup(popup, event.target)){
-        popup.remove();
-        document.removeEventListener('mousedown', removePopup);
-        index = 0;
+    var changeContent = function(event) {
+        var result = response.data[index];
+        var japanese = result.japanese[0];
+        var english = result.senses[0];
+
+        if (event && event.keyCode && event.keyCode !== toggle) { 
+            return;
+        }
+
+        content.reading.innerHTML = japanese.reading || '';
+        content.word.innerHTML = japanese.word || '';
+        content.definitions.innerHTML = english.english_definitions.join(', ') || '';
+        content.partsOfSpeech.innerHTML = english.parts_of_speech.join(', ') || '';
+        content.jishoLink.innerHTML = 'jisho.org'
+        content.jishoLink.href = 'http://jisho.org/search/' + encodeURIComponent(japanese.word);
+        content.jishoLink.target = '_blank';
+
+        modal.style.height = (english.english_definitions.join('').length + 150).toString() + 'px';
+
+        if (index === response.data.length - 1) {
+            index = 0;
+            return;
+        }
+
+        index++;
+    }
+
+    changeContent();
+    modal.addEventListener('mouseup', changeContent);
+    document.addEventListener('keyup', changeContent);
+}
+
+function removeModal(event) {
+    var modal = document.querySelector('.IJmodal');
+
+    if(!isModal(modal, event.target)){
+        modal.remove();
+        document.removeEventListener('mousedown', removeModal);
         return;
     }
 
     return;
 }
 
-function isPopup (popupNode, node) {
+function isModal (modalNode, node) {
     if (node === document || node === window) {
         return false;
     }
 
-    if (node === popupNode) {
+    if (node === modalNode) {
         return true;
     }
 
-    return isPopup(popupNode, node.parentNode);
+    return isModal(modalNode, node.parentNode);
 }
 
-function removePreviousPopup () {
-    var popup = document.querySelector('.IJpopup');
-    if (popup){
-        popup.remove();
+function removePreviousModal () {
+    var modal = document.querySelector('.IJmodal');
+    if (modal){
+        modal.remove();
     }
 }
 // TODO 

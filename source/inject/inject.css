@@ -1,6 +1,6 @@
-.IJpopup {
+.IJmodal {
   width: 230px;
-  /* height: 230px; */
+  height: 230px;
   background-color: #fff;
   color: #333;
   border: solid 1px #ccc;
@@ -35,7 +35,7 @@
   padding: 3px 20px 3px 20px;
 }
 
-#IJjisho {
+#IJjishoLink {
   position: absolute;
   color: #DC5757; 
   bottom: 10px;
@@ -50,22 +50,4 @@
   color: #fff;
   font-size: 10px;
   text-transform: lowercase;
-}
-
-.IJclose {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 5px;
-  top: 5px;
-  border-radius: 20px;  
-  text-align: center;
-  line-height: 1;
-  background-color: #DC5757;
-  color: #fff;
-  cursor: pointer;
-}
-
-.IJclose:hover {
-  background-color: #DD3636;
 }

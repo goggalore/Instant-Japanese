@@ -7,16 +7,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   definitionRequest.open('GET', searchUrl);
 
   definitionRequest.onreadystatechange = function() {
+    // if (this.readyState === 4 && JSON.parse(this.responseText.data) == null) {
+    //   sendResponse({status: 'Couldn\'t find a definition that matched this word'})
+    // }
     if (this.readyState === 4 && this.status === 200) {
       definitionResponse = JSON.parse(this.responseText);
       sendResponse(definitionResponse);
     }
-    else if (this.readyState === 4 && this.status != 200) {
+    else if (this.readyState === 4 && this.status !== 200) {
       sendResponse({status: 'No response from the Jisho.org API'});
-    }
-    else if (this.readyState === 4 && this.responseText.data === undefined) {
-      console.log('check');
-      sendResponse({status: 'Couldn\'t find a definition that matched this word'})
     }
   }
 
