@@ -2,17 +2,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   var searchUrl = 'http://jisho.org/api/v1/search/' + 'words?keyword=' + 
       encodeURIComponent(request.searchTerm);
   var definitionRequest = new XMLHttpRequest;
-  var definitionResponse = {};
+  var response = {};
 
   definitionRequest.open('GET', searchUrl);
 
   definitionRequest.onreadystatechange = function() {
-    // if (this.readyState === 4 && JSON.parse(this.responseText.data) == null) {
-    //   sendResponse({status: 'Couldn\'t find a definition that matched this word'})
-    // }
-    if (this.readyState === 4 && this.status === 200) {
-      definitionResponse = JSON.parse(this.responseText);
-      sendResponse(definitionResponse);
+    response = JSON.parse(this.responseText);
+    if (this.readyState === 4 && response.data[0] === undefined) {
+      sendResponse({status: 'Oh no! Jisho.org couldn\'t find a definition that matched this word'})
+    }
+    else if (this.readyState === 4 && this.status === 200) {
+      sendResponse(response);
     }
     else if (this.readyState === 4 && this.status !== 200) {
       sendResponse({status: 'No response from the Jisho.org API'});

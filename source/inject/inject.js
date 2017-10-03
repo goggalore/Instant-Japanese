@@ -32,13 +32,12 @@ function createModal(response) {
         'partsOfSpeech': document.createElement('span'),
         'jishoLink': document.createElement('a'),
     }
+    var appTag = 'IJ' // unique idenitifier extension's injected HTML objects
 
     var contentNames = Object.getOwnPropertyNames(content);
 
     var displacementX = 25;
     var displacementY = 25;
-
-    var index = 0;
 
     removePreviousModal();
 
@@ -48,29 +47,41 @@ function createModal(response) {
     
 
     for(var i = 0; i < contentNames.length; i++){
-        content[contentNames[i]].className = 'IJcontent';
-        content[contentNames[i]].id = 'IJ' + contentNames[i];
+        content[contentNames[i]].className = appTag + 'content';
+        content[contentNames[i]].id = appTag + contentNames[i];
         modal.appendChild(content[contentNames[i]]);
     }
 
     document.body.appendChild(modal);
     document.addEventListener('mousedown', removeModal);
 
-    displayDefinition(index, content, response);
+    displayDefinition(content, response);
 }
 
-function displayDefinition(index, content, response) {   
+function displayDefinition(content, response) {   
     var modal = document.querySelector('.IJmodal');
     var toggle = 'T'.charCodeAt();
 
+    var index = 0;
+
     var changeContent = function(event) {
-        var result = response.data[index];
-        var japanese = result.japanese[0];
-        var english = result.senses[0];
+        var result = [];
+        var japanese = {};
+        var english = {};
 
         if (event && event.keyCode && event.keyCode !== toggle) { 
             return;
         }
+
+        if (response.status !== undefined) {
+            modal.style.height = '70px';
+            content.reading.innerHTML = response.status;
+            return
+        }
+
+        result = response.data[index]
+        japanese = result.japanese[0];
+        english = result.senses[0];
 
         content.reading.innerHTML = japanese.reading || '';
         content.word.innerHTML = japanese.word || '';
@@ -126,4 +137,5 @@ function removePreviousModal () {
     }
 }
 // TODO 
-// when response returns an empty dictionary definition, display appropriate error message
+// don't allow modal to go outside of view
+// fix ugly formatting that occurs on some definitions
