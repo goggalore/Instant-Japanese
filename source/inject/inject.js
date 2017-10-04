@@ -7,7 +7,7 @@ document.addEventListener('mousedown', getCoordinates);
 function onKeyPress(event) {  
     var toggle = 'T'.charCodeAt();
     var selection = document.getSelection().toString();
-    var modal = document.querySelector('.IJmodal'); // don't want to send a request if modal is already open
+    var modal = document.querySelector('.IJmodal'); // don't want to send a request if a modal is already open
 
     const MAX_LENGTH = 20;
 
@@ -32,7 +32,7 @@ function createModal(response) {
         'partsOfSpeech': document.createElement('span'),
         'jishoLink': document.createElement('a'),
     }
-    var appTag = 'IJ' // unique idenitifier extension's injected HTML objects
+    var appTag = 'IJ' // unique idenitifier for the extension's injected HTML objects
 
     var contentNames = Object.getOwnPropertyNames(content);
 
