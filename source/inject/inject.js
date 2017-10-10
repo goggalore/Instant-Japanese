@@ -4,7 +4,7 @@ var positionY = 0;
 document.addEventListener('keyup', onKeyPress);
 document.addEventListener('mousedown', getCoordinates);
 
-function onKeyPress(event) {  
+function onKeyPress (event) {  
     var toggle = 'T'.charCodeAt();
     var selection = document.getSelection().toString();
     var modal = document.querySelector('.IJmodal'); // don't want to send a request if modal is already open
@@ -18,12 +18,35 @@ function onKeyPress(event) {
     return;
 }
 
-function getCoordinates(event) {
+function getCoordinates (event) {
     positionX = event.pageX;
     positionY = event.pageY;
 }
 
-function createModal(response) {
+function getDisplacement () {
+    var displacement = {
+        x: -25,
+        y: 25
+    };
+
+    var boundX = 0.90;
+    var boundY = 0.88;
+
+    var height = window.innerHeight;
+    var width = window.innerWidth;
+
+    if((positionX - window.scrollX)/width >= boundX) {
+        displacement.x = -width/8; 
+    }
+
+    if ((positionY - window.scrollY)/height >= boundY) {
+        displacement.y = -height/5;
+    }
+
+    return displacement;
+}
+
+function createModal (response) {
     var modal = document.createElement('div');
     var content = {
         'reading': document.createElement('span'),
@@ -32,18 +55,17 @@ function createModal(response) {
         'partsOfSpeech': document.createElement('span'),
         'jishoLink': document.createElement('a'),
     }
-    var appTag = 'IJ' // unique idenitifier extension's injected HTML objects
+    var appTag = 'IJ' // unique idenitifier for extension's injected HTML objects
 
     var contentNames = Object.getOwnPropertyNames(content);
 
-    var displacementX = 25;
-    var displacementY = 25;
+    var displacement = getDisplacement();
 
     removePreviousModal();
 
     modal.className = 'IJmodal';
-    modal.style.top = (positionY + displacementY).toString() + 'px';
-    modal.style.left = (positionX - displacementX).toString() + 'px';
+    modal.style.top = (positionY + displacement.y).toString() + 'px';
+    modal.style.left = (positionX + displacement.x).toString() + 'px';
     
 
     for(var i = 0; i < contentNames.length; i++){
@@ -58,7 +80,7 @@ function createModal(response) {
     displayDefinition(content, response);
 }
 
-function displayDefinition(content, response) {   
+function displayDefinition (content, response) {   
     var modal = document.querySelector('.IJmodal');
     var toggle = 'T'.charCodeAt();
 
@@ -106,7 +128,7 @@ function displayDefinition(content, response) {
     document.addEventListener('keyup', changeContent);
 }
 
-function removeModal(event) {
+function removeModal (event) {
     var modal = document.querySelector('.IJmodal');
 
     if(!isModal(modal, event.target)){
@@ -137,5 +159,5 @@ function removePreviousModal () {
     }
 }
 // TODO 
-// don't allow modal to go outside of view
+// add right click functionality so that the user doesn't have to use the keyboard to bring up a definition
 // fix ugly formatting that occurs on some definitions
