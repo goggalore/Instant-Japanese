@@ -7,7 +7,7 @@ document.addEventListener('mousedown', getCoordinates);
 function onKeyPress (event) {  
     var toggle = 'T'.charCodeAt();
     var selection = document.getSelection().toString();
-    var modal = document.querySelector('.IJmodal'); // don't want to send a request if modal is already open
+    var modal = document.querySelector('.IJmodal'); // don't want to send a request if a modal is already open
 
     const MAX_LENGTH = 20;
 
@@ -55,7 +55,11 @@ function createModal (response) {
         'partsOfSpeech': document.createElement('span'),
         'jishoLink': document.createElement('a'),
     }
+<<<<<<< HEAD
     var appTag = 'IJ' // unique idenitifier for extension's injected HTML objects
+=======
+    var appTag = 'IJ' // unique idenitifier for the extension's injected HTML objects
+>>>>>>> 85a9ee7fd7ffeeaaf236c50b5a1ae97da0e253f1
 
     var contentNames = Object.getOwnPropertyNames(content);
 
@@ -159,5 +163,10 @@ function removePreviousModal () {
     }
 }
 // TODO 
+<<<<<<< HEAD
 // add right click functionality so that the user doesn't have to use the keyboard to bring up a definition
 // fix ugly formatting that occurs on some definitions
+=======
+// don't allow modal to go outside of view
+// fix ugly formatting that occurs on some definitions
+>>>>>>> 85a9ee7fd7ffeeaaf236c50b5a1ae97da0e253f1
