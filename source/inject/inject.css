@@ -36,12 +36,10 @@
 }
 
 #IJjishoLink {
-  position: absolute;
   color: #DC5757; 
-  bottom: 10px;
-  left: 0px;
   font-size: 12px;
   cursor: pointer;
+  padding: 10px;
 }
 
 #IJpartsOfSpeech {

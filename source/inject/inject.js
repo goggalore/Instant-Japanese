@@ -7,11 +7,11 @@ document.addEventListener('mousedown', getCoordinates);
 function onKeyPress (event) {  
     var toggle = 'T'.charCodeAt();
     var selection = document.getSelection().toString();
-    var modal = document.querySelector('.IJmodal'); // don't want to send a request if a modal is already open
+    var modal = document.querySelector('.IJmodal'); // don't want to send a request if modal is already open
 
     const MAX_LENGTH = 20;
 
-    if(modal === null && event.keyCode === toggle && selection !== '' && selection.length <= MAX_LENGTH) {
+    if(!modal && selection && event.keyCode === toggle && selection.length <= MAX_LENGTH) {
         chrome.runtime.sendMessage({searchTerm: selection}, createModal);
     }
 
@@ -23,28 +23,6 @@ function getCoordinates (event) {
     positionY = event.pageY;
 }
 
-function getDisplacement () {
-    var displacement = {
-        x: -25,
-        y: 25
-    };
-
-    var boundX = 0.90;
-    var boundY = 0.88;
-
-    var height = window.innerHeight;
-    var width = window.innerWidth;
-
-    if((positionX - window.scrollX)/width >= boundX) {
-        displacement.x = -width/8; 
-    }
-
-    if ((positionY - window.scrollY)/height >= boundY) {
-        displacement.y = -height/5;
-    }
-
-    return displacement;
-}
 
 function createModal (response) {
     var modal = document.createElement('div');
@@ -55,15 +33,14 @@ function createModal (response) {
         'partsOfSpeech': document.createElement('span'),
         'jishoLink': document.createElement('a'),
     }
-<<<<<<< HEAD
     var appTag = 'IJ' // unique idenitifier for extension's injected HTML objects
-=======
-    var appTag = 'IJ' // unique idenitifier for the extension's injected HTML objects
->>>>>>> 85a9ee7fd7ffeeaaf236c50b5a1ae97da0e253f1
 
     var contentNames = Object.getOwnPropertyNames(content);
 
-    var displacement = getDisplacement();
+    var displacement = {
+        x: -25,
+        y: 25
+    };
 
     removePreviousModal();
 
@@ -117,7 +94,8 @@ function displayDefinition (content, response) {
         content.jishoLink.href = 'http://jisho.org/search/' + encodeURIComponent(japanese.word);
         content.jishoLink.target = '_blank';
 
-        modal.style.height = (english.english_definitions.join('').length + 150).toString() + 'px';
+        setModalHeight(modal);
+        adjustModalPosition(modal);
 
         if (index === response.data.length - 1) {
             index = 0;
@@ -130,6 +108,35 @@ function displayDefinition (content, response) {
     changeContent();
     modal.addEventListener('mouseup', changeContent);
     document.addEventListener('keyup', changeContent);
+}
+
+function setModalHeight (modal) {
+    var height = 0;
+    var children = modal.children; // set height in respect to how much space the content (children nodes) take up
+
+    for(var i = 0; i < children.length; i++) {
+        height += parseInt(children[i].offsetHeight);
+    }
+
+    modal.style.height = height + 'px';
+}
+
+function adjustModalPosition (modal) {
+    // not used in code yet, trying to figure out proper positioning
+    var modalRight = (modal.offsetLeft + modal.offsetWidth) - window.scrollX;
+    var modalBottom = (modal.offsetTop + modal.offsetHeight) - window.scrollY; 
+
+    var windowHeight = window.innerHeight;
+    var windowWidth = window.innerWidth;
+
+    console.log('Bottom: ' + modalBottom, 'Window Y: ' + windowHeight, 'Bottom > Window Y: ' + (modalBottom > windowHeight));
+    if (modalRight > windowWidth) {
+        modal.style.left = (positionX + modalRight - windowWidth) + 'px';
+    }
+
+    if (modalBottom > windowHeight) {
+        modal.style.top = (positionY + modalBottom - windowHeight) + 'px';
+    }
 }
 
 function removeModal (event) {
@@ -163,10 +170,4 @@ function removePreviousModal () {
     }
 }
 // TODO 
-<<<<<<< HEAD
-// add right click functionality so that the user doesn't have to use the keyboard to bring up a definition
-// fix ugly formatting that occurs on some definitions
-=======
-// don't allow modal to go outside of view
-// fix ugly formatting that occurs on some definitions
->>>>>>> 85a9ee7fd7ffeeaaf236c50b5a1ae97da0e253f1
+// fix positioning function
