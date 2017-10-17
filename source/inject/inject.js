@@ -44,7 +44,7 @@ function createModal (response) {
 
     removePreviousModal();
 
-    modal.className = 'IJmodal';
+    modal.className = appTag + 'modal';
     modal.style.top = (positionY + displacement.y).toString() + 'px';
     modal.style.left = (positionX + displacement.x).toString() + 'px';
     
@@ -95,7 +95,7 @@ function displayDefinition (content, response) {
         content.jishoLink.target = '_blank';
 
         setModalHeight(modal);
-        adjustModalPosition(modal);
+        // adjustModalPosition(modal);
 
         if (index === response.data.length - 1) {
             index = 0;
@@ -112,10 +112,12 @@ function displayDefinition (content, response) {
 
 function setModalHeight (modal) {
     var height = 0;
-    var children = modal.children; // set height in respect to how much space the content (children nodes) take up
-
+    var children = modal.children; // set height in respect to how much space the content (child nodes) take up
+    
     for(var i = 0; i < children.length; i++) {
-        height += parseInt(children[i].offsetHeight);
+        if(!children[i + 1]) {
+            height += children[i].offsetTop + children[i].offsetHeight
+        }
     }
 
     modal.style.height = height + 'px';
