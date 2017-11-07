@@ -7,25 +7,25 @@
 <html>
   <head>
     <title>Instant Japanese popup</title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-        height: 110px;
-        width: 200px;
-      }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
-      }
-    </style>
-
+  <link rel="stylesheet" href="styles.css">
   </head>
-  <body>
-    Highlight a word and press T to translate some Japanese! Click T again or on the popup to scroll through defintions.
+  <body>  
+    <p id='title'>- Welcome! -</p>
+    <p id='help'> To get started...</p>
+    <p id='first'>
+      <div class='float'> 1 </div>
+      Highlight the word you wish to be translated
+    </p>
+    <p>
+      <div class='float'> 2 </div>
+      Click T to translate the highlighted word
+    </p>
+    <p> 
+      <div class='float'> 3 </div>
+      Click T again or on the popup to scroll through definitions
+    </p>
+    <p id='link'>
+      All definitions provided by <a href='http://jisho.org' target='_blank'>jisho.org</a>
+    </p>
   </body>
 </html>
-
