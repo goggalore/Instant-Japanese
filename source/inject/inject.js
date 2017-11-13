@@ -12,6 +12,7 @@ function onKeyPress (event) {
     const MAX_LENGTH = 20;
 
     if(!modal && selection && event.keyCode === toggle && selection.length <= MAX_LENGTH) {
+        displayLoading();
         chrome.runtime.sendMessage({searchTerm: selection}, createModal);
     }
 
@@ -23,6 +24,13 @@ function getCoordinates (event) {
     positionY = event.pageY;
 }
 
+function displayLoading () {
+    var loading = {
+        'status': 'Loading...'
+    };
+
+    createModal(loading);
+}
 
 function createModal (response) {
     var modal = document.createElement('div');
