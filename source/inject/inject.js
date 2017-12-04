@@ -6,7 +6,7 @@ document.addEventListener('mousedown', getCoordinates);
 
 function onKeyPress (event) {  
     var toggle = 'T'.charCodeAt();
-    var selection = document.getSelection().toString();
+    var selection = document.getSelection().toString().trim();
     var modal = document.querySelector('.IJmodal'); // don't want to send a request if modal is already open
 
     const MAX_LENGTH = 20;
