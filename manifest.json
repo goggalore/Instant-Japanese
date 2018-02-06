@@ -11,7 +11,7 @@
     },
 
     "background": {
-        "scripts": ["source/eventPage/eventPage.js"],
+        "scripts": ["source/event/event.js"],
         "persistent": false
     },
 
@@ -23,8 +23,8 @@
     "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "css": ["source/inject/inject.css"],
-      "js": ["source/inject/inject.js"]
+      "css": ["css/inject.css"],
+      "js": ["src/inject/inject.js"]
     }
   ]
 }
