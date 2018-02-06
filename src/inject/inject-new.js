@@ -1,4 +1,4 @@
-import { getAppTag, createModal, getClickPos, getAppTag } from './modal.js';
+import { getAppTag, createModal, getClickPos } from './modal.js';
 
 document.addEventListener('mousedown', setClickPosition);
 document.addEventListener('keyup', onKeyPress);
