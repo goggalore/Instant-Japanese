@@ -1,4 +1,4 @@
-import { createElem, buildDomTree, addAttribs } from '../utils.js';
+import { createElem, buildDomTree, addAttribs } from './utils.js';
 
 const clickPos = {
     x: 0,
