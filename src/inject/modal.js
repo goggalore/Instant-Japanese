@@ -38,7 +38,7 @@ export function maxZIndex(tree) {
         let zIndex = window.getComputedStyle(elem).zIndex;
 
         if (!elem instanceof Element) {
-            console.warn(`entry of tree not an Element`);
+            console.warn(`entry ${elem} of tree not an Element`);
             return accum;
         }
 
