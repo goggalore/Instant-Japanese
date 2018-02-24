@@ -12,7 +12,6 @@ gulp.task('rollup', () => {
 });
 
 gulp.task('default', ['rollup'], () => {
-    gulp.watch(['./src/inject/main.js', './src/inject/modal.js', './src/util.js',
-                './src/event/event.js']);
+    gulp.watch(['./src/inject/main.js', './src/inject/modal.js', './src/util.js']);
 });
 
