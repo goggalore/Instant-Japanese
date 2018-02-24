@@ -13,8 +13,8 @@ export function getTextPosition() {
         y: 25
     };
 
-    let posX = selectionPos.x + window.scrollX + displacement.x
-    let posY = selectionPos.y + window.scrollY + displacement.y
+    let posX = selectionPos.x + window.scrollX + displacement.x;
+    let posY = selectionPos.y + window.scrollY + displacement.y;
 
     if (posX + selectionPos.width + modalWidth > window.innerWidth) {
         posX -= posX + selectionPos.width + modalWidth - window.innerWidth; 
