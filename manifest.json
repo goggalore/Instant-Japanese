@@ -3,7 +3,7 @@
     
     "name": "Instant Japanese",
     "description": "This extension translates a highlighted expression from Japanese to English or English to Japanese at the click of a button",
-    "version": "0.0.6",
+    "version": "0.0.7",
 
     "browser_action": {
         "default_icon": "icons/icon.png",
@@ -11,7 +11,7 @@
     },
 
     "background": {
-        "scripts": ["source/event/event.js"],
+        "scripts": ["src/event/event.js"],
         "persistent": false
     },
 
@@ -24,7 +24,7 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "css": ["css/inject.css"],
-      "js": ["src/inject/inject.js"]
+      "js": ["dist/main.js"]
     }
   ]
 }
