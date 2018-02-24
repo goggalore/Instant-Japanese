@@ -1,23 +1,37 @@
-import { createElem, buildDomTree, addAttribs } from './utils.js';
+import { buildDomTree, createElem, addAttribs } from '../util.js';
 
-const clickPos = {
-    x: 0,
-    y: 0,
-};
+const appTag = "IJ";
 
-export function setClickPos(event) {
-    clickPos.x = event.pageX;
-    clickPos.y = event.pageY;
-}
+export function getTextPosition() {
+    const modal = document.body.appendChild(
+        createElem("div", {"id": `${appTag}modal`, "display": "hidden"}, undefined));
+    const modalWidth = parseInt(window.getComputedStyle(modal).width);
 
-export function* getAppTag() {
-    for (;;) {
-        yield "IJ";
-    } 
+    const selectionPos = window.getSelection().getRangeAt(0).getClientRects()[0];
+    const displacement = {
+        x: 0,
+        y: 25
+    };
+
+    let posX = selectionPos.x + window.scrollX + displacement.x
+    let posY = selectionPos.y + window.scrollY + displacement.y
+
+    if (posX + selectionPos.width + modalWidth > window.innerWidth) {
+        posX -= posX + selectionPos.width + modalWidth +  - window.innerWidth; 
+    }
+
+    removeModal(modal);
+
+    return { 
+        x: posX,
+        y: posY
+    };
 }
 
 export function createModal(response) {
-    const appTag = getAppTag().next().value; 
+    removeModal(document.getElementById(`${appTag}modal`));
+
+    const position = getTextPosition();
     
     const modal = createElem("div", {"id": `${appTag}modal`}, undefined);
     const content = [
@@ -28,14 +42,12 @@ export function createModal(response) {
         createElem("a", {"id": `${appTag}jishoLink`}, undefined)
     ];
 
-    content.forEach(elem => elem.setAttribute("class", `${appTag}content`));
+    content.forEach(elem => addAttribs(elem, {"class": `${appTag}content`}));
 
     buildDomTree(modal, content);
 
-    // TODO find a way to get positioning from click without using
-    // global variable
-    modal.style.left = `${(clickPos.x + 20).toString()}px`;
-    modal.style.top = `${(clickPos.y - 20).toString()}px`;
+    modal.style.left = `${position.x.toString()}px`;
+    modal.style.top = `${position.y.toString()}px`;
 
     document.body.appendChild(modal);
     document.addEventListener("click", function() {
@@ -48,10 +60,9 @@ export function createModal(response) {
     generateContent(content, response);
 }
 
-function generateContent(content, response) {
+export function generateContent(content, response) {
     const toggle = 'T'.charCodeAt();
-    const appTag = getAppTag().next().value;
-    
+
     let index = 0;
 
     const changeContent = (event) => {
@@ -67,13 +78,14 @@ function generateContent(content, response) {
         const result = response.data[index];
         const japanese = result.japanese[0];
         const english = result.senses[0];
+        const jishoLink = japanese.word || japanese.reading;
 
         addAttribs(content, [{"innerHTML": japanese.reading}, 
                                {"innerHTML": japanese.word},
                                {"innerHTML": english.english_definitions.join(', ')},
                                {"innerHTML": english.parts_of_speech.join(', ')},
                                {"innerHTML": "jisho.org", 
-                                "href": `http://jisho.org/search/${encodeURIComponent(japanese.word)}`, 
+                                "href": `http://jisho.org/search/${encodeURIComponent(jishoLink)}`, 
                                 "target": '_blank'}]);
                           
         index += 1; 
@@ -84,11 +96,11 @@ function generateContent(content, response) {
     }
 
     changeContent();
-    document.getElementById(`${appTag}modal`).addEventListener('mouseup', changeContent);
-    document.addEventListener('keyup', changeContent);
+    document.getElementById(`${appTag}modal`).addEventListener("mouseup", changeContent);
+    document.addEventListener("keyup", changeContent);
 }
 
-function isChild(parentNode, node) {
+export function isChild(parentNode, node) {
     if (node === document || node === window) {
         return false;
     }
@@ -100,7 +112,7 @@ function isChild(parentNode, node) {
     return isChild(parentNode, node.parentNode);
 }
 
-function removeModal(modal) {
+export function removeModal(modal) {
     if (modal) {
         modal.remove();
     }

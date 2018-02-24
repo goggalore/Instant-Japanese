@@ -44,40 +44,44 @@ export function buildDomTree(parent, children) {
     return parent;
 }
 
-export function addAttribs(element, attribs) {
-    if (element instanceof Array) {
+export function addAttribs(elem, attribs) {
+    if (elem instanceof Array) {
         if (!(attribs instanceof Array)) {
-            console.warn(`addAttribs: If element is given as an Array, \
+            console.warn(`addAttribs: If elem is given as an Array, \
                           attribs must also be an Array`);
             return;
         }
-        if (element.length !== attribs.length) {
-            console.warn(`addAttribs: If element is given as an Array, \
-                          attribs must have the same length as element`);
+        if (elem.length !== attribs.length) {
+            console.warn(`addAttribs: If elem is given as an Array, \
+                          attribs must have the same length as elem`);
             return;
         }
 
-        for (const i in element) {
-            addAttribs(element[i], attribs[i]);
+        for (let i in elem) {
+            addAttribs(elem[i], attribs[i]);
         }
         
-        return;
+        return elem; // useful if you need the elements back to reference them, esp. if they
+                        // havent been appended to the DOM 
+                        // but be careful, if they have been appended, this function produces side effects.
     }
 
-    if (!(element instanceof Element)) {
-        console.warn(`addAttribs: An element must be instance of Element`);
+    if (!(elem instanceof Element)) {
+        console.warn(`addAttribs: An elem must be instance of Elem`);
     }
     
     Object.keys(attribs).forEach((attrib) => {
         if (attrib === "innerHTML") {
             if (attribs[attrib] === undefined) {
-                element.innerHTML = '';
+                elem.innerHTML = '';
                 return;
             }
 
-            element.innerHTML = attribs[attrib];
+            elem.innerHTML = attribs[attrib];
         }
 
-        element.setAttribute(attrib, attribs[attrib]);
+        elem.setAttribute(attrib, attribs[attrib]);
     });
+
+    return elem;
 }
