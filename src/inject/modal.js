@@ -17,7 +17,7 @@ export function getTextPosition() {
     let posY = selectionPos.y + window.scrollY + displacement.y
 
     if (posX + selectionPos.width + modalWidth > window.innerWidth) {
-        posX -= posX + selectionPos.width + modalWidth +  - window.innerWidth; 
+        posX -= posX + selectionPos.width + modalWidth - window.innerWidth; 
     }
 
     removeModal(modal);
