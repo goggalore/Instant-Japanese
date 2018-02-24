@@ -1,13 +1,12 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
-  var searchUrl = 'http://jisho.org/api/v1/search/' + 'words?keyword=' + 
+  const searchUrl = 'http://jisho.org/api/v1/search/' + 'words?keyword=' + 
       encodeURIComponent(request.searchTerm);
-  var definitionRequest = new XMLHttpRequest;
-  var response = {};
+  const definitionRequest = new XMLHttpRequest;
 
   definitionRequest.open('GET', searchUrl);
 
   definitionRequest.onreadystatechange = function() {
-    response = JSON.parse(this.responseText);
+    const response = JSON.parse(this.responseText);
     if (this.readyState === 4 && response.data[0] === undefined) {
       sendResponse({status: 'Oh no! Jisho.org couldn\'t find a definition that matched this word'})
     }
