@@ -1,6 +1,5 @@
-.IJmodal {
+#IJmodal {
   width: 230px;
-  height: 230px;
   background-color: #fff;
   color: #333;
   border: solid 1px #ccc;
@@ -16,34 +15,35 @@
   font-size: 10px;
   position: relative;
   text-align: center;
-  font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+  font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, 
+  "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
 }
 
 #IJreading {
   font-size: 11px;
-  padding: 20px 10px 0px 10px;
+  padding: 20px 5px 5px 0px;
 }
 
 #IJword {
   font-size: 30px;
-  padding: 2px 2px 2px 0px;
+  padding: 0px 5px 5px 0px;
 }
 
-#IJdefinitions {
+#IJdefinition {
   font-size: 12px;
   padding: 3px 20px 3px 20px;
 }
 
 #IJjishoLink {
-  color: #DC5757; 
+  color: #e04552; 
   font-size: 12px;
   cursor: pointer;
-  padding: 10px;
+  padding: 12px 10px 10px 10px;
 }
 
 #IJpartsOfSpeech {
   top: 5px;
-  background-color: #DC5757;
+  background-color: #e04552;
   color: #fff;
   font-size: 10px;
   text-transform: lowercase;
