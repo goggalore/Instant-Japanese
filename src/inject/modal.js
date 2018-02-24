@@ -28,10 +28,37 @@ export function getTextPosition() {
     };
 }
 
+export function maxZIndex(tree) {
+    if (!tree.reduce) {
+        console.warn('tree must have a reduce method');
+        return;
+    }
+
+    return tree.reduce((accum, elem) => {
+        let zIndex = window.getComputedStyle(elem).zIndex;
+
+        if (!elem instanceof Element) {
+            console.warn(`entry of tree not an Element`);
+            return;
+        }
+
+        if (isNaN(zIndex)) {
+            zIndex = 0;
+        }
+
+        if (zIndex > accum) {
+            return zIndex;
+        }
+
+        return accum;
+    }, 0);  
+}
+
 export function createModal(response) {
     removeModal(document.getElementById(`${appTag}modal`));
 
     const position = getTextPosition();
+    const zIndex = maxZIndex(Array.from(document.querySelectorAll("*")));
     
     const modal = createElem("div", {"id": `${appTag}modal`}, undefined);
     const content = [
@@ -48,6 +75,7 @@ export function createModal(response) {
 
     modal.style.left = `${position.x.toString()}px`;
     modal.style.top = `${position.y.toString()}px`;
+    modal.style.zIndex = zIndex + 1;
 
     document.body.appendChild(modal);
     document.addEventListener("click", function() {
