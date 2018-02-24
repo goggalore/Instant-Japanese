@@ -1,5 +1,4 @@
-import { getTextPosition, createModal, generateContent, isChild, removeModal} from './modal.js';
-import { buildDomTree, createElem, addAttribs } from '../util.js'
+import { createModal } from './modal.js';
 
 const appTag = "IJ";
 
