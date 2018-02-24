@@ -1,0 +1,31 @@
+{
+  "name": "instant-japanese",
+  "version": "0.0.7",
+  "description": "A Japanese-English translator Chrome extension",
+  "main": "src/inject/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/goggalore/Instant-Japanese.git"
+  },
+  "keywords": [
+    "english",
+    "japanese",
+    "translator",
+    "chrome",
+    "extension"
+  ],
+  "author": "June Crane",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/goggalore/Instant-Japanese/issues"
+  },
+  "homepage": "https://github.com/goggalore/Instant-Japanese#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "rollup-stream": "^1.24.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
