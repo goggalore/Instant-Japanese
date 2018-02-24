@@ -39,7 +39,7 @@ export function maxZIndex(tree) {
 
         if (!elem instanceof Element) {
             console.warn(`entry of tree not an Element`);
-            return;
+            return accum;
         }
 
         if (isNaN(zIndex)) {
