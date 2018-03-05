@@ -98,6 +98,10 @@ export function generateContent(content, response) {
             return;
         }
 
+        if (event && event.target.href) {
+            return; 
+        }
+
         if (response.status !== undefined) {
             content[2].innerHTML = response.status;
             return; 
