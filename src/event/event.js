@@ -6,17 +6,22 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   definitionRequest.open('GET', searchUrl);
 
   definitionRequest.onreadystatechange = function() {
-    const response = JSON.parse(this.responseText);
-    if (this.readyState === 4 && response.data[0] === undefined) {
-      sendResponse({status: 'Oh no! Jisho.org couldn\'t find a definition that matched this word'})
-    }
-    else if (this.readyState === 4 && this.status === 200) {
-      sendResponse(response);
-    }
-    else if (this.readyState === 4 && this.status !== 200) {
-      sendResponse({status: 'No response from the Jisho.org API'});
-    }
+    try {
+      const response = JSON.parse(this.responseText);
+      if (this.readyState === 4 && response.data[0] === undefined) {
+        sendResponse({status: 'Oh no! Jisho.org couldn\'t find a definition that matched this word'})
+      }
+      else if (this.readyState === 4 && this.status === 200) {
+        sendResponse(response);
+      }
+      else if (this.readyState === 4 && this.status !== 200) {
+        sendResponse({status: 'No response from the Jisho.org API'});
+      }
+  } catch {
+    console.log(this.responseText)
   }
+}
+
 
   definitionRequest.send();
   return true; // specifies that sendResponse is asynchronous
